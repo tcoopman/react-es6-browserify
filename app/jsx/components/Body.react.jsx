@@ -1,3 +1,5 @@
+module React from 'react';
+
 class _Body {
     getClassName() {
         return 'foo';

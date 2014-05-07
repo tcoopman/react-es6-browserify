@@ -1,3 +1,4 @@
+module React from 'react';
 import {Body} from './Body.react.jsx';
 
 

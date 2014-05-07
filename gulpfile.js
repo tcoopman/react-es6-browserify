@@ -50,6 +50,7 @@ gulp.task('browserify', function () {
     return browserify({
             entries: [entryFile]
         }).
+        require('./node_modules/react/react.js').
         transform(reactify).
         transform(es6ify.configure(/.jsx/)).
         bundle({ debug: true}).
