@@ -7,4 +7,4 @@ class _MarkdownRenderer {
         );
     }
 }
-export const WorkInput = React.createClass(_WorkInput.prototype);
+export const MarkdownRenderer = React.createClass(_MarkdownRenderer.prototype);

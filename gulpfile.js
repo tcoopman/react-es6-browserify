@@ -11,9 +11,6 @@ var es6ify = require('es6ify');
 var reactify = require('reactify');
 var source = require('vinyl-source-stream');
 
-var stylus = require('gulp-stylus');
-var jeet = require('jeet');
-
 
 /** Config variables */
 var serverPort = 8888;
@@ -30,7 +27,7 @@ var jsxFiles = 'app/jsx/**/*.jsx';
 
 var vendorFiles = [
     'bower_components/react/react-with-addons.js',
-    'node_modules/gulp-traceur/node_modules/traceur/bin/traceur-runtime.js'];
+    'node_modules/es6ify/node_modules/traceur/bin/traceur-runtime.js'];
 var vendorBuild = dist + '/vendor';
 
 
