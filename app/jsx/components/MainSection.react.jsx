@@ -1,4 +1,4 @@
-import {MarkdownRenderer} from './Markdown.react.jsx';
+import {Body} from './Body.react.jsx';
 
 
 class _MainSection {
@@ -6,7 +6,7 @@ class _MainSection {
         return (
             <div>
                 <h1>Example of React with es6 and browserify</h1>
-                <MarkdownRenderer />
+                <Body />
             </div>
         );
     }

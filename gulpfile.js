@@ -43,16 +43,18 @@ gulp.task('html', function () {
 });
 
 
+var entryFile = './app/jsx/app.jsx';
+es6ify.traceurOverrides = {experimental: true};
+
 gulp.task('browserify', function () {
-    es6ify.traceurOverrides = {experimental: true}
     return browserify({
-            entries: ['./app/jsx/app.jsx']
+            entries: [entryFile]
         }).
         transform(reactify).
         transform(es6ify.configure(/.jsx/)).
         bundle({ debug: true}).
         on('error', function (err) { console.error(err); }).
-        pipe(source('./app/jsx/app.jsx')).
+        pipe(source(entryFile)).
         pipe(rename('app.js')).
         pipe(gulp.dest('dist/bundle'));
 });
