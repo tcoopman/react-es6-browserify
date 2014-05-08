@@ -68,7 +68,22 @@ gulp.task('server', function (next) {
 });
 
 
-gulp.task('watch', function () {
+function initWatch(files, task) {
+    if (typeof task === "string") {
+        gulp.start(task);
+        gulp.watch(files, [task]);
+    } else {
+        task.map(function (t) { gulp.start(t) });
+        gulp.watch(files, task);
+    }
+}
+
+
+
+/**
+ * Run default task
+ */
+gulp.task('default', ['vendor', 'server'], function () {
     var lrServer = livereload(lrPort);
     var reloadPage = function (evt) {
         lrServer.changed(evt.path);
@@ -83,13 +98,4 @@ gulp.task('watch', function () {
     initWatch(htmlFiles, 'html');
 
     gulp.watch([dist + '/**/*'], reloadPage);
-});
-
-
-
-/**
- * Run default task
- */
-gulp.task('default', ['vendor', 'server'], function () {
-    gulp.start('watch');
 });
