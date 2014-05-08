@@ -29,6 +29,7 @@ var vendorFiles = [
     'bower_components/react/react-with-addons.js',
     'node_modules/es6ify/node_modules/traceur/bin/traceur-runtime.js'];
 var vendorBuild = dist + '/vendor';
+var requireFiles = './node_modules/react/react.js';
 
 
 gulp.task('vendor', function () {
@@ -50,7 +51,7 @@ gulp.task('browserify', function () {
     return browserify({
             entries: [entryFile]
         }).
-        require('./node_modules/react/react.js').
+        require(requireFiles).
         transform(reactify).
         transform(es6ify.configure(/.jsx/)).
         bundle({ debug: true}).

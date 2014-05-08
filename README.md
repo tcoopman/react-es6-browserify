@@ -45,6 +45,7 @@ gulp.task('browserify', function () {
     return browserify({
             entries: [entryFile]
         }).
+        require('./node_modules/react/react.js').
         transform(reactify).
         transform(es6ify.configure(/.jsx/)).
         bundle({ debug: true}).
@@ -58,7 +59,7 @@ gulp.task('browserify', function () {
 
 The browserify task does following things:
 
-* It compiles the entryFile (and all imported files), 
+* It compiles the entryFile (and all imported files) + requires the react file,
 * first through reactify (jsx compilation step)
 * then through es6ify (ES6 -> ES5). We configure es6ify to compile the jsx files.
 * Debug: true: creates sourcemaps
