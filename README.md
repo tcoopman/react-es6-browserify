@@ -22,63 +22,66 @@ The compiled code can be found in dist/bundle/app.js.
 
 ## Compilation step
 
-This shows only the relevant steps. All the steps can be found in _gulpfile.js_.
+This shows only the relevant steps. All the steps can be found in _gulpfile.js_. The main compilation step is shown below. Most of the inspiration comes from [7]. You should check this post, there is a great gulpfile included!
+
+Because we also include react in the browserify steps, we use watchify to make the incremental builds fast.
+
+
+```js
+function compileScripts(watch) {
+    gutil.log('Starting browserify');
+
+    // The main script
+    var entryFile = './app/jsx/app.jsx';
+
+    // Set exeperimental to true to use features like let, const,...
+    es6ify.traceurOverrides = {experimental: true};
+
+    var bundler;
+    // Use watchify for fast updates, otherwise use browserify
+    if (watch) {
+        bundler = watchify(entryFile);
+    } else {
+        bundler = browserify(entryFile);
+    }
+
+    // Include react
+    bundler.require(requireFiles);
+
+    // Compile the jsx files
+    bundler.transform(reactify);
+
+    // Compile ES6 features. Make sure to set configure is you use .jsx files
+    bundler.transform(es6ify.configure(/.jsx/));
+
+    var rebundle = function () {
+        // Debug: true: creates sourcemaps
+        var stream = bundler.bundle({ debug: true});
+
+        stream.on('error', function (err) { console.error(err) });
+        // Source uses vinyl-source-stream. This lets us use the browserify api directly instead of using the gulp-browserify plugin [4].
+        stream = stream.pipe(source(entryFile));
+
+        // rename the resulting file to app.js and save it to dist/bundle
+        stream.pipe(rename('app.js'));
+        stream.pipe(gulp.dest('dist/bundle'));
+    }
+    
+    // When watchify see an update, run rebundle.
+    bundler.on('update', rebundle);
+    return rebundle();
+}
 
 ```
-var rename = require('gulp-rename');
-var browserify = require('browserify');
-var es6ify = require('es6ify');
-var reactify = require('reactify');
-var source = require('vinyl-source-stream');
-```
-
-_vinyl-source-stream_ lets us use the browserify api directly instead of using the gulp-browserify plugin [4].
-
-```
-var entryFile = './app/jsx/app.jsx'
-```
-
-This is the main script that needs to be compiled
-
-```
-gulp.task('browserify', function () {
-    return browserify({
-            entries: [entryFile]
-        }).
-        require('./node_modules/react/react.js').
-        transform(reactify).
-        transform(es6ify.configure(/.jsx/)).
-        bundle({ debug: true}).
-        on('error', function (err) { console.error(err); }).
-        pipe(source(entryFile)).
-        pipe(rename('app.js')).
-        pipe(gulp.dest('dist/bundle'));
-});
-
-```
-
-The browserify task does following things:
-
-* It compiles the entryFile (and all imported files) + requires the react file,
-* first through reactify (jsx compilation step)
-* then through es6ify (ES6 -> ES5). We configure es6ify to compile the jsx files.
-* Debug: true: creates sourcemaps
-* If there is an error, report it to the console
-* source: input the entryfile to browserify
-* rename the resulting file to app.js and save it to dist/bundle
-
-
-```
-es6ify.traceurOverrides = {experimental: true};
-```
-
-This lets us use experimental functions of traceur (like let and const).
 
 ## React with ES6
 
 ### ES6 classes
 
-```
+```js
+module React from 'react'; // import react
+
+
 class _MainSection {
     render() {
         return (
@@ -94,13 +97,13 @@ export const MainSection = React.createClass(_MainSection.prototype);
 
 We can create ES6 classes, but have to export it with `React.createClass` [5]. Importing the created files can be done like this:
 
-```
+```js
 import {MainSection} from './components/MainSection.react.jsx';
 ```
 
 ### String templating for classes
 
-```
+```js
 class _Body {
     getClassName() {
         return 'foo';
@@ -131,3 +134,4 @@ As you can see, you can use template literals [6] to create your classnames.
 * [4] vinyl-source-stream - https://www.npmjs.org/package/vinyl-source-stream
 * [5] react-es6-class - https://github.com/bjoerge/react-es6-class
 * [6] Template Literals - https://github.com/google/traceur-compiler/wiki/LanguageFeatures#template-literals
+* [7] Fast build with browserify and reactjs - http://blog.avisi.nl/2014/04/25/how-to-keep-a-fast-build-with-browserify-and-reactjs/

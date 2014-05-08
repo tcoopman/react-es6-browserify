@@ -1,12 +1,14 @@
 'use strict';
 
 var gulp = require('gulp');
+var gutil = require('gulp-util');
 
 var livereload = require('gulp-livereload');
 var connect = require('connect');
 
 var rename = require('gulp-rename');
 var browserify = require('browserify');
+var watchify = require('watchify');
 var es6ify = require('es6ify');
 var reactify = require('reactify');
 var source = require('vinyl-source-stream');
@@ -44,22 +46,36 @@ gulp.task('html', function () {
 });
 
 
-var entryFile = './app/jsx/app.jsx';
-es6ify.traceurOverrides = {experimental: true};
+function compileScripts(watch) {
+    gutil.log('Starting browserify');
 
-gulp.task('browserify', function () {
-    return browserify({
-            entries: [entryFile]
-        }).
-        require(requireFiles).
-        transform(reactify).
-        transform(es6ify.configure(/.jsx/)).
-        bundle({ debug: true}).
-        on('error', function (err) { console.error(err); }).
-        pipe(source(entryFile)).
-        pipe(rename('app.js')).
-        pipe(gulp.dest('dist/bundle'));
-});
+    var entryFile = './app/jsx/app.jsx';
+    es6ify.traceurOverrides = {experimental: true};
+
+    var bundler;
+    if (watch) {
+        bundler = watchify(entryFile);
+    } else {
+        bundler = browserify(entryFile);
+    }
+
+    bundler.require(requireFiles);
+    bundler.transform(reactify);
+    bundler.transform(es6ify.configure(/.jsx/));
+
+    var rebundle = function () {
+        var stream = bundler.bundle({ debug: true});
+
+        stream.on('error', function (err) { console.error(err) });
+        stream = stream.pipe(source(entryFile));
+        stream.pipe(rename('app.js'));
+
+        stream.pipe(gulp.dest('dist/bundle'));
+    }
+        
+    bundler.on('update', rebundle);
+    return rebundle();
+}
 
 
 gulp.task('server', function (next) {
@@ -79,7 +95,6 @@ function initWatch(files, task) {
 }
 
 
-
 /**
  * Run default task
  */
@@ -94,7 +109,7 @@ gulp.task('default', ['vendor', 'server'], function () {
         gulp.watch(files, [task]);
     }
 
-    initWatch(jsxFiles, 'browserify');
+    compileScripts(true);
     initWatch(htmlFiles, 'html');
 
     gulp.watch([dist + '/**/*'], reloadPage);
