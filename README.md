@@ -7,7 +7,6 @@ This is a boilerplate repo for using react with ES6 and browserify, and running 
 
 ```
 npm install
-bower install
 ```
 
 After the installation, run `gulp` and browse to _http://localhost:8888_
