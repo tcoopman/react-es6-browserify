@@ -1,6 +1,6 @@
 {
   "name": "react-es6-browserify",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "dependencies": {},
   "devDependencies": {
     "browserify": "^3.46.0",
