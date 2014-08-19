@@ -1,4 +1,5 @@
-module React from 'react';
+const React = require('react');
+
 
 class _Body {
     getClassName() {

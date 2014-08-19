@@ -1,4 +1,4 @@
-module React from 'react';
+const React = require('react');
 import {Body} from './Body.react.jsx';
 
 
