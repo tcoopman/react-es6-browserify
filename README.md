@@ -78,7 +78,7 @@ function compileScripts(watch) {
 ### ES6 classes
 
 ```js
-module React from 'react'; // import react
+import React from 'react'; // import react
 
 
 class _MainSection {

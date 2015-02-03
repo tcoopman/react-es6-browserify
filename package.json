@@ -1,11 +1,11 @@
 {
   "name": "react-es6-browserify",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "dependencies": {},
   "devDependencies": {
     "browserify": "^3.46.0",
     "connect": "^2.15.0",
-    "es6ify": "^1.1.0",
+    "es6ify": "^1.6.0",
     "gulp": "^3.6.2",
     "gulp-browserify": "^0.5.0",
     "gulp-livereload": "^1.3.1",
