@@ -4,7 +4,6 @@ This is a boilerplate repo for using react with ES6 and browserify, and running 
 
 ## Installation
 
-
 ```
 npm install
 ```
@@ -25,7 +24,6 @@ This shows only the relevant steps. All the steps can be found in _gulpfile.js_.
 
 Because we also include react in the browserify steps, we use watchify to make the incremental builds fast.
 
-
 ```js
 function compileScripts(watch) {
     gutil.log('Starting browserify');
@@ -33,7 +31,7 @@ function compileScripts(watch) {
     // The main script
     var entryFile = './app/jsx/app.jsx';
 
-    // Set exeperimental to true to use features like let, const,...
+    // Set experimental to true to use features like let, const,...
     es6ify.traceurOverrides = {experimental: true};
 
     var bundler;
@@ -80,7 +78,6 @@ function compileScripts(watch) {
 ```js
 import React from 'react'; // import react
 
-
 class _MainSection {
     render() {
         return (
@@ -108,7 +105,6 @@ class _Body {
         return 'foo';
     }
 
-
     render() {
         const x = 'x';
 
@@ -122,7 +118,6 @@ class _Body {
 ```
 
 As you can see, you can use template literals [6] to create your classnames.
-
 
 ## Sources
 
