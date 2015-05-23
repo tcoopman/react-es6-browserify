@@ -1,8 +1,9 @@
-const React = require('react');
+
+import React from 'react';
 import {Body} from './Body.react.jsx';
 
 
-class _MainSection {
+export class MainSection extends React.Component {
     render() {
         return (
             <div>
@@ -12,4 +13,3 @@ class _MainSection {
         );
     }
 }
-export const MainSection = React.createClass(_MainSection.prototype);
